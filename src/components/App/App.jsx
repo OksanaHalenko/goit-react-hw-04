@@ -1,7 +1,11 @@
+import SearchBar from "../SearchBar/SearchBar";
 import "./App.css";
 
 function App() {
-  return <h1>Hello!</h1>;
+  const onSubmit = (topic) => {
+    console.log(topic);
+  };
+  return <SearchBar onSubmit={onSubmit} />;
 }
 
 export default App;
