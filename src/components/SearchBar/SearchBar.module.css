@@ -43,3 +43,6 @@
   border-color: goldenrod;
   box-shadow: inset 0 0 8px gold;
 }
+.toaster {
+  margin-top: 48px;
+}

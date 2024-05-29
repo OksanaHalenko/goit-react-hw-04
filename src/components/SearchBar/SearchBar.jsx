@@ -1,12 +1,15 @@
 import css from "./SearchBar.module.css";
 import { IoSearchOutline } from "react-icons/io5";
+import toast, { Toaster } from "react-hot-toast";
+
 function SearchBar({ onSubmit }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
     const topic = form.elements.topic.value;
     if (topic.trim() === "") {
-      alert("Please enter search term!");
+      const notify = () => toast.error("Please enter search term!");
+      notify();
       return;
     }
     onSubmit(topic);
@@ -30,6 +33,7 @@ function SearchBar({ onSubmit }) {
           Search
         </button>
       </form>
+      <Toaster containerClassName={css.toaster} />
     </header>
   );
 }
