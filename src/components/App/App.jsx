@@ -63,13 +63,13 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={handleSubmit} />
-      <Loader loading={loading} />
       {error ? (
         <ErrorMessage />
       ) : (
         <ImageGallery images={images} onClick={openModal} />
       )}
-      {images.length > 0 && page !== totalPage && (
+      <Loader loading={loading} />
+      {!loading && images.length > 0 && page !== totalPage && (
         <LoadMoreBtn onLoadMore={handleLoadMore} />
       )}
       {selectedImage && (
