@@ -16,6 +16,7 @@ function App() {
   const [error, setError] = useState(false);
   const [topic, setTopic] = useState("");
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState();
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -23,7 +24,11 @@ function App() {
         setLoading(true);
         setError(false);
         const data = await fetchImageWithTopic(topic, page);
-        setImages(data);
+        const newImages = data.results;
+        setImages((prevImages) => {
+          return [...prevImages, ...newImages];
+        });
+        setTotalPage(data.total_pages);
       } catch (error) {
         setError(true);
       } finally {
@@ -34,8 +39,9 @@ function App() {
   }, [page, topic]);
 
   const handleSubmit = async (dataSearch) => {
-    setImages([]);
     setTopic(dataSearch);
+    setImages([]);
+    setPage(1);
   };
   const handleLoadMore = async () => {
     setPage(page + 1);
@@ -45,7 +51,9 @@ function App() {
       <SearchBar onSubmit={handleSubmit} />
       <Loader loading={loading} />
       {error ? <ErrorMessage /> : <ImageGallery images={images} />}
-      <LoadMoreBtn onLoadMore={handleLoadMore} />
+      {images.length > 0 && page !== totalPage && (
+        <LoadMoreBtn onLoadMore={handleLoadMore} />
+      )}
     </>
   );
 }
