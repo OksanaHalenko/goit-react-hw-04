@@ -1,11 +1,9 @@
 import css from "./ErrorMessage.module.css";
 
-function ErrorMessage() {
+function ErrorMessage({ text }) {
   return (
     <div className={css.wrapper}>
-      <p className={css.text}>
-        Whoops, something went wrong! Please try reloading this page!
-      </p>
+      <p className={css.text}>{text}</p>
     </div>
   );
 }

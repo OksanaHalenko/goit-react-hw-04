@@ -2,7 +2,7 @@ import "./App.css";
 
 import { fetchImageWithTopic } from "../../galleryApi";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import SearchBar from "../SearchBar/SearchBar";
 import ImageGallery from "../ImageGallery/ImageGallery";
@@ -20,6 +20,19 @@ function App() {
   const [totalPage, setTotalPage] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    if (images.length > 0) {
+      const { height } =
+        scrollRef.current.firstElementChild.getBoundingClientRect();
+      window.scrollBy({
+        top: height * 2,
+        behavior: "smooth",
+      });
+    }
+  }, [images]);
 
   useEffect(() => {
     if (topic === "") {
@@ -49,9 +62,11 @@ function App() {
     setImages([]);
     setPage(1);
   };
+
   const handleLoadMore = async () => {
     setPage(page + 1);
   };
+
   function openModal(image) {
     setSelectedImage(image);
     setIsOpen(true);
@@ -63,15 +78,27 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={handleSubmit} />
+
       {error ? (
-        <ErrorMessage />
+        <ErrorMessage
+          text={"Whoops, something went wrong! Please try reloading this page!"}
+        />
+      ) : totalPage === 0 ? (
+        <ErrorMessage text={"Sorry, no images was found. Try another query."} />
       ) : (
-        <ImageGallery images={images} onClick={openModal} />
+        <ImageGallery
+          images={images}
+          onClick={openModal}
+          scrollRef={scrollRef}
+        />
       )}
+
       <Loader loading={loading} />
+
       {!loading && images.length > 0 && page !== totalPage && (
         <LoadMoreBtn onLoadMore={handleLoadMore} />
       )}
+
       {selectedImage && (
         <ImageModal
           modalIsOpen={modalIsOpen}
